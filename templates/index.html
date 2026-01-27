@@ -21,6 +21,13 @@
     <p>
         <a href="/new_item">Uusi matkasuunnitelma</a>
     </p>
+    <h2>Matkasuunnitelmat</h2>
+    <ul>
+        {% for item in items %}
+        <li><a href="/item/{{ item.id }}"> {{ item.destination }}</a></li>
+        {% endfor %}
+    </ul>
+
 </body>
 
 </html>

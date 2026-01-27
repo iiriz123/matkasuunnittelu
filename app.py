@@ -2,16 +2,22 @@ import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
-
 import config
 import db
+import items
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_items = items.get_items()
+    return render_template("index.html", items=all_items)
+
+@app.route("/item/<int:item_id>")
+def show_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("show_item.html", item=item)
 
 @app.route("/new_item")
 def new_item():
@@ -24,10 +30,7 @@ def create_item():
     description = request.form["description"]
     user_id = session["user_id"]
 
-    sql = """INSERT INTO items (destination, travel_dates, description, user_id) 
-    VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [destination, travel_dates, description, user_id])
-
+    items.add_item(destination, travel_dates, description, user_id)
     return redirect("/")
 
 @app.route("/register")
