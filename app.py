@@ -33,6 +33,21 @@ def create_item():
     items.add_item(destination, travel_dates, description, user_id)
     return redirect("/")
 
+@app.route("/edit_item/<int:item_id>")
+def edit_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("edit_item.html", item=item)
+
+@app.route("/update_item", methods=["POST"])
+def update_item():
+    item_id = request.form["item_id"]
+    destination = request.form["destination"]
+    travel_dates = request.form["travel_dates"]
+    description = request.form["description"]
+
+    items.update_item(destination, travel_dates, description, item_id)
+    return redirect("/item/" + str(item_id)) 
+
 @app.route("/register")
 def register():
     return render_template("register.html")

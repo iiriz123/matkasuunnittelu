@@ -10,9 +10,18 @@ def get_items():
     return db.query(sql)
 
 def get_item(item_id):
-    sql="""SELECT i.destination,
+    sql="""SELECT i.id,
+                  i.destination,
                   i.travel_dates,
                   i.description,
-                  u.username
+                  u.username,
+                  u.id user_id
     from items i, users u WHERE u.id = i.user_id AND i.id = ?"""
     return db.query(sql, [item_id])[0]
+
+def update_item(destination, travel_dates, description, item_id):
+    sql = """ UPDATE items SET destination = ?,
+                               travel_dates = ?,
+                               description = ? WHERE id = ?"""
+
+    db.execute(sql, [destination, travel_dates, description, item_id])
