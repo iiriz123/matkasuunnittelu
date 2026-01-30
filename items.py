@@ -28,3 +28,11 @@ def update_item(destination, travel_dates, description, item_id):
 def remove_item(item_id):
     sql = "DELETE FROM items WHERE id = ?"
     db.execute(sql, [item_id])
+
+def find_items(query):
+    sql = """SELECT id, destination 
+             FROM items
+             WHERE destination LIKE ? OR description LIKE ?
+             ORDER BY id DESC"""
+    like = "%" + query + "%"
+    return db.query(sql, [like, like])
