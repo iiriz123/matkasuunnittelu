@@ -17,7 +17,8 @@ def get_item(item_id):
                   u.username,
                   u.id user_id
     from items i, users u WHERE u.id = i.user_id AND i.id = ?"""
-    return db.query(sql, [item_id])[0]
+    result = db.query(sql, [item_id])
+    return result[0] if result else None
 
 def update_item(destination, travel_dates, description, item_id):
     sql = """ UPDATE items SET destination = ?,
