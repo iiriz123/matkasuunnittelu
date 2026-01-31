@@ -11,18 +11,23 @@
     <p>
         Olet kirjautunut nimellä {{ session.username }}
     </p>
-    {% endif %}
     <p>
-        <a href="/login">Kirjaudu sisään</a>
-        <a href="/register">Rekisteröidy</a>
         <a href="/logout">Kirjaudu ulos</a>
     </p>
-
     <p>
         <a href="/new_item">Uusi matkasuunnitelma</a>
-        <a href="/find_item">Etsi matkasuunnitelma</a>
+    </p>
+    {% else %}
+    <p>
+        <a href="/login">Kirjaudu sisään</a>
+        <a href="/register">Luo tunnus</a>
+    </p>
+    {% endif %}
+    <p>
+      <a href="/find_item">Etsi matkasuunnitelma</a>
     </p>
     <h2>Matkasuunnitelmat</h2>
+
     <ul>
         {% for item in items %}
         <li><a href="/item/{{ item.id }}"> {{ item.destination }}</a></li>
