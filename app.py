@@ -45,8 +45,12 @@ def create_item():
     require_login()
 
     destination = request.form["destination"]
+    if not destination or len(destination) > 50:
+        abort(403)
     travel_dates = request.form["travel_dates"]
     description = request.form["description"]
+    if not description or len(description) > 2000:
+        abort(403)
     user_id = session["user_id"]
 
     items.add_item(destination, travel_dates, description, user_id)
@@ -67,15 +71,18 @@ def update_item():
     require_login()
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
-
     if not item:
         abort(404)
     if item["user_id"] != session["user_id"]:
         abort(403)
 
     destination = request.form["destination"]
+    if not destination or len(destination) > 50:
+        abort(403)
     travel_dates = request.form["travel_dates"]
     description = request.form["description"]
+    if not description or len(description) > 2000:
+        abort(403)
 
     items.update_item(destination, travel_dates, description, item_id)
     return redirect("/item/" + str(item_id)) 
