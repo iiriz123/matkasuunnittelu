@@ -5,9 +5,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
 import items
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def format_date(date_str):
+    if date_str:
+        date_object = datetime.strptime(date_str, '%Y-%m-%d')
+        return date_object.strftime('%d.%m.%Y')
+    return date_str
+
+app.jinja_env.filters['format_date'] = format_date
 
 def require_login():
     if "user_id" not in session:
@@ -47,13 +56,14 @@ def create_item():
     destination = request.form["destination"]
     if not destination or len(destination) > 50:
         abort(403)
-    travel_dates = request.form["travel_dates"]
+    start_date = request.form["start_date"]
+    end_date = request.form["end_date"]
     description = request.form["description"]
     if not description or len(description) > 2000:
         abort(403)
     user_id = session["user_id"]
 
-    items.add_item(destination, travel_dates, description, user_id)
+    items.add_item(destination, start_date, end_date, description, user_id)
     return redirect("/")
 
 @app.route("/edit_item/<int:item_id>")
@@ -79,12 +89,13 @@ def update_item():
     destination = request.form["destination"]
     if not destination or len(destination) > 50:
         abort(403)
-    travel_dates = request.form["travel_dates"]
+    start_date = request.form["start_date"]
+    end_date = request.form["end_date"]
     description = request.form["description"]
     if not description or len(description) > 2000:
         abort(403)
 
-    items.update_item(destination, travel_dates, description, item_id)
+    items.update_item(destination, start_date, end_date, description, item_id)
     return redirect("/item/" + str(item_id)) 
 
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])

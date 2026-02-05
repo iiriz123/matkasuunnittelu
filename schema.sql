@@ -7,7 +7,8 @@ CREATE TABLE users (
 CREATE TABLE items(
     id INTEGER PRIMARY KEY,
     destination TEXT,
-    travel_dates TEXT,
+    start_date TEXT,
+    end_date TEXT,
     description TEXT,
     user_id INTEGER REFERENCES users
 );

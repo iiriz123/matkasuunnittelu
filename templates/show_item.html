@@ -14,7 +14,7 @@
     </p>
     {% endif %}
     <p>
-        Matkan ajankohta: {{ item.travel_dates }}
+        Matkan ajankohta: {{ item.start_date | format_date }} - {{ item.end_date | format_date }}
     </p>
     <p>
         {{ item.description }}

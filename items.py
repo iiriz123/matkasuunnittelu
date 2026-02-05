@@ -1,9 +1,9 @@
 import db
 
-def add_item(destination, travel_dates, description, user_id):
-    sql = """INSERT INTO items (destination, travel_dates, description, user_id) 
-    VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [destination, travel_dates, description, user_id])
+def add_item(destination, start_date, end_date, description, user_id):
+    sql = """INSERT INTO items (destination, start_date, end_date, description, user_id) 
+    VALUES (?, ?, ?, ?, ?)"""
+    db.execute(sql, [destination, start_date, end_date, description, user_id])
 
 def get_items():
     sql= "SELECT id, destination FROM items ORDER BY id DESC"
@@ -12,7 +12,8 @@ def get_items():
 def get_item(item_id):
     sql="""SELECT i.id,
                   i.destination,
-                  i.travel_dates,
+                  i.start_date,
+                  i.end_date,
                   i.description,
                   u.username,
                   u.id user_id
@@ -20,11 +21,12 @@ def get_item(item_id):
     result = db.query(sql, [item_id])
     return result[0] if result else None
 
-def update_item(destination, travel_dates, description, item_id):
+def update_item(destination, start_date, end_date, description, item_id):
     sql = """ UPDATE items SET destination = ?,
-                               travel_dates = ?,
+                               start_date = ?,
+                               end_date = ?,
                                description = ? WHERE id = ?"""
-    db.execute(sql, [destination, travel_dates, description, item_id])
+    db.execute(sql, [destination, start_date, end_date, description, item_id])
 
 def remove_item(item_id):
     sql = "DELETE FROM items WHERE id = ?"
