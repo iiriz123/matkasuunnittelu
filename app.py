@@ -1,10 +1,10 @@
 import sqlite3
 from flask import Flask
 from flask import abort, redirect, render_template, request, session
-from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
 import items
+import users
 from datetime import datetime
 
 app = Flask(__name__)
@@ -26,6 +26,14 @@ def require_login():
 def index():
     all_items = items.get_items()
     return render_template("index.html", items=all_items)
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    items = users.get_items(user_id)
+    return render_template("show_user.html", user=user, items=items)
 
 @app.route("/find_item")
 def find_item():
@@ -130,15 +138,13 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
-
-    try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+    
+    try: 
+        users.create_user(username, password1)
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
-
     return "Tunnus luotu"
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -148,12 +154,8 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
-        user_id = result["id"]
-        password_hash = result["password_hash"]
-
-        if check_password_hash(password_hash, password):
+        user_id = users.check_login(username, password)
+        if user_id:
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
