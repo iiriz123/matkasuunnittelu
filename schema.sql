@@ -12,3 +12,10 @@ CREATE TABLE items(
     description TEXT,
     user_id INTEGER REFERENCES users
 );
+
+CREATE TABLE item_classes (
+    id INTEGER PRIMARY KEY,
+    item_id INTEGER REFERENCES items,
+    title TEXT,
+    value TEXT 
+);

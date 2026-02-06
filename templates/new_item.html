@@ -18,6 +18,27 @@
       <input type="date" name="end_date" size="8" required/>
     </p>
     <p>
+      Matkan luonne: <br />
+      <select name="trip_type">
+        <option value="">(valitse)</option>
+        <option value="kaupunkiloma">kaupunkiloma</option>
+        <option value="rantaloma">rantaloma</option>
+        <option value="luontokohde">luontokohde</option>
+        <option value="risteily">risteily</option>
+        <option value="road trip">road trip</option>
+      </select>
+    </p>
+    <p>
+      Budjetti: <br />
+      <select name="budget">
+        <option value="">(valitse)</option>
+        <option value="superedullinen">superedullinen</option>
+        <option value="keskihintainen">keskihintainen</option>
+        <option value="luksus">luksus</option>        
+        <option value="all inclusive">all inclusive</option>        
+      </select>
+    </p>
+    <p>
       Suunnitelma <br>
       <textarea name="description" rows="8" cols="60" placeholder="Kirjoita tähän listaus matkasi aktiviteeteista" maxlength="2000" required></textarea>
     </p>

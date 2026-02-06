@@ -16,6 +16,16 @@
     <p>
         Matkan ajankohta: {{ item.start_date | format_date }} - {{ item.end_date | format_date }}
     </p>
+    {% if classes %}
+    <p>
+        Luokat:
+        <ul>
+            {% for class in classes %}
+            <li>{{ class.title}}: {{ class.value }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    {% endif %}
     <p>
         {{ item.description }}
     </p>
