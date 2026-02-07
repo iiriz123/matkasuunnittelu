@@ -56,7 +56,8 @@ def show_item(item_id):
 @app.route("/new_item")
 def new_item():
     require_login()
-    return render_template("new_item.html")
+    classes = items.get_all_classes()
+    return render_template("new_item.html", classes=classes)
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -72,13 +73,11 @@ def create_item():
         abort(403)
     user_id = session["user_id"]
 
-    classes = []
-    trip_type = request.form["trip_type"]
-    if trip_type:
-        classes.append(("Matkan luonne", trip_type))
-    budget = request.form["budget"]
-    if trip_type:
-        classes.append(("Budjetti", budget))
+    classes= []
+    for entry in request.form.getlist("classes"):
+        if entry:
+            parts = entry.split(":")
+            classes.append((parts[0], parts[1]))
 
     items.add_item(destination, start_date, end_date, description, user_id, classes)
     return redirect("/")
