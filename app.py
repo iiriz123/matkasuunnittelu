@@ -171,6 +171,22 @@ def show_image(image_id):
     response.headers.set("Content-Type", "image/jpeg")
     return response
 
+@app.route("/remove_images", methods=["POST"])
+def remove_images():
+    require_login()
+
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if not item:
+        abort(404)
+    if item["user_id"] != session["user_id"]:
+        abort(403)
+
+    for image in request.form.getlist("image_id"):
+        items.remove_image(item_id, image)
+
+    return redirect("/images/" + str(item_id))
+
 @app.route("/update_item", methods=["POST"])
 def update_item():
     require_login()
