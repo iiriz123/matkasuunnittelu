@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import abort, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session
 import config
 import db
 import items
@@ -40,6 +40,8 @@ def find_item():
     query = request.args.get("query")
     if query:
         results = items.find_items(query)
+        if not results:
+            flash("Haku ei tuottanut tulosta. Kokeile toista hakusanaa.")
     else:
         query = ""
         results = []
@@ -250,14 +252,23 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
+    if not username or len(username) < 3 or len(username) > 30:
+        abort(403)
+    if not password1 or len(password1) < 8 or len(password1) > 60:
+        abort(403)
+
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
-    
+        flash("VIRHE: salasanat eivät ole samat", "error")
+        return redirect("/register")  
+
     try: 
         users.create_user(username, password1)
+        flash("Tunnus luotu", "success")
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
-    return "Tunnus luotu"
+        flash("VIRHE: tunnus on jo varattu", "error")
+    
+    return redirect("/register")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -273,8 +284,10 @@ def login():
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
+        
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            flash("VIRHE: väärä tunnus tai salasana", "error")
+            return redirect("/login")
 
 @app.route("/logout")
 def logout():

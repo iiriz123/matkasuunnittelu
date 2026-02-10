@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Matkasuunnitelman poistaminen</title>
-</head>
+{% block title %}Matkasuunnitelman poisto{% endblock %}
 
-<body>
-    <h1>Matkasuunnitelman poisto</h1>
-    <p>Suunnitelma: {{ item.destination }}</p>
-    <p>Haluatko varmasti poistaa tämän suunnitelman?</p>
-  <form action="/remove_item/{{ item.id }}" method="post">
-    <input type="submit" name="remove" value="Poista suunnitelma">
-    <input type="submit" name="back" value="Palaa takaisin">
-  </form>
-</body>
-
-</html>
+{% block content %}
+<h2>Matkasuunnitelman poisto</h2>
+<p>Suunnitelma: {{ item.destination }}</p>
+<p>Haluatko varmasti poistaa tämän suunnitelman?</p>
+<form action="/remove_item/{{ item.id }}" method="post">
+  <input type="submit" name="remove" value="Poista suunnitelma">
+  <input type="submit" name="back" value="Palaa takaisin">
+</form>
+{% endblock %}
