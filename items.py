@@ -57,7 +57,12 @@ def get_classes(item_id):
     return db.query(sql, [item_id])
 
 def get_items():
-    sql= "SELECT id, destination FROM items ORDER BY id DESC"
+    sql= """SELECT items.id, items.destination, users.id user_id, users.username,
+                   COUNT(comments.id) comment_count  
+            FROM items JOIN users ON items.user_id = users.id
+                       LEFT JOIN comments ON items.id = comments.item_id
+            GROUP BY items.id
+            ORDER BY items.id DESC"""
     return db.query(sql)
 
 def get_item(item_id):
