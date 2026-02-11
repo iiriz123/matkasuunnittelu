@@ -90,7 +90,9 @@ def create_item():
             classes.append((class_title, class_value))
 
     items.add_item(destination, start_date, end_date, description, user_id, classes)
-    return redirect("/")
+
+    item_id = db.last_insert_id()
+    return redirect("/item/" + str(item_id))
 
 @app.route("/create_comment", methods=["POST"])
 def create_comment():
