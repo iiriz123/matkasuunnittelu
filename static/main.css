@@ -10,3 +10,25 @@ body {
     margin: 1em;
     padding: 0.2em 0.5em;
 }
+
+pre {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.0;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.category-button {
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}

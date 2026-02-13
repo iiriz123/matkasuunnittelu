@@ -3,6 +3,7 @@
 {% block title %}{{ item.destination }}{% endblock %}
 
 {% block content %}
+
 <h2>{{ item.destination }}</h2>
 {% if session.user_id == item.user_id %}
 <p>
@@ -15,25 +16,25 @@
 {% for image in images %}
 <img src="/image/{{ image.id }}" />
 {% endfor %}
+
+{% if classes %}
+<div class="categories">
+    {% for title, value in classes %}
+        <span class="category-button">{{ title }}: {{ value }}</span>
+    {% endfor %}
+</div>
+{% endif %}
 <p>
     Matkan ajankohta: {{ item.start_date | format_date }} - {{ item.end_date | format_date }}
 </p>
-{% if classes %}
-<p>
-    Luokat:
-    <ul>
-        {% for class in classes %}
-        <li>{{ class.title}}: {{ class.value }}</li>
-        {% endfor %}
-    </ul>
-</p>
-{% endif %}
 <p>
     Suunnitelma:
-    {{ item.description }}
 </p>
+<pre>
+{{ item.description }}
+</pre>
 <p>
-    Tekijä: <a href="/user/{{ item.user_id }}">{{ item.username }}</a>
+    Suunnittelija: <a href="/user/{{ item.user_id }}">{{ item.username }}</a>
 </p>
 <h3>Kommentit</h3>
 <ul>
@@ -41,6 +42,7 @@
     <li>{{ comment.comment }} <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a></li>
     {% endfor %}
 </ul>
+{% if session.user_id %}
 <h3>Uusi kommentti</h3>
 <form action="/create_comment" method="post">
     <textarea name="comment" rows="5" cols="50" maxlength="1000" required></textarea>
@@ -49,4 +51,5 @@
         <input type="submit" value="Kommentoi" />
     </p>
 </form>
+{% endif %}
 {% endblock %}

@@ -22,6 +22,7 @@ def add_item(destination, start_date, end_date, description, user_id, classes):
     sql = "INSERT INTO item_classes (item_id, title, value) VALUES (?, ?, ?)"
     for title, value in classes:
         db.execute(sql, [item_id, title, value])
+    return item_id
 
 def add_comment(item_id, user_id, comment):
     sql = """INSERT INTO comments (item_id, user_id, comment) 
