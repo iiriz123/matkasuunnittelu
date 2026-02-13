@@ -155,11 +155,13 @@ def add_image():
 
     file = request.files["image"]
     if not file.filename.endswith(".jpg"):
-        return "VIRHE: väärä tiedostomuoto"
+        flash("VIRHE: väärä tiedostomuoto", "error")
+        return redirect("/images/" + str(item_id))
 
     image = file.read()
     if len(image) > 2024 * 1000:
-        return "VIRHE: liian suuri kuva"
+        flash("VIRHE: liian suuri kuva", "error")
+        return redirect("/images/" + str(item_id))
 
     items.add_image(item_id, image)
     return redirect("/images/" + str(item_id))

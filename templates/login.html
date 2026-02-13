@@ -5,10 +5,6 @@
 {% block content %}
 <h2>Kirjaudu sisään</h2>
 
-<style>
-  .error { color: red; }
-</style>
-
 <form action="/login" method="post">
   <p>
     Tunnus: <br />
@@ -18,15 +14,11 @@
     Salasana: <br />
     <input type="password" name="password" />
   </p>
-  {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-      <ul>
-        {% for category, message in messages %}
-          <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+  {% for message in get_flashed_messages() %}
+  <div class="error">
+    {{ message }}</b>
+  </div>
+  {% endfor %}
   <input type="submit" value="Kirjaudu" />
 </form>
 {% endblock %}

@@ -27,6 +27,11 @@
     Kuva: <input type="file" name="image" accept=".jpg" />
   </p>
   <input type="hidden" name="item_id" value="{{ item.id }}">
+  {% for message in get_flashed_messages() %}
+  <div class="error">
+    {{ message }}</b>
+  </div>
+  {% endfor %}
   <input type="submit" value="Lähetä" />
 </form>
 <p>

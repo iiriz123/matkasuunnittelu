@@ -20,14 +20,10 @@
     <li><a href="/item/{{ item.id }}">{{ item.destination }}</a></li>
     {% endfor %}
 </u>
-{% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-      <ul>
-        {% for category, message in messages %}
-          <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-{% endwith %}
+{% for message in get_flashed_messages() %}
+<p>
+    <b>{{ message }}</b>
+</p>
+{% endfor %}
 {% endif %}
 {% endblock %}

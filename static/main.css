@@ -32,3 +32,6 @@ pre {
     border: 1px solid #ccc;
     border-radius: 15px;
 }
+
+.error { color: red; }
+.success { color: green; }
