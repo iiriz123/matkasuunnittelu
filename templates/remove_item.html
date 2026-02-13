@@ -3,8 +3,8 @@
 {% block title %}Matkasuunnitelman poisto{% endblock %}
 
 {% block content %}
-<h2>Matkasuunnitelman poisto</h2>
-<p>Suunnitelma: {{ item.destination }}</p>
+<h2>{{ item.destination }}</h2>
+<h3>Matkasuunnitelman poisto</h3>
 <p>Haluatko varmasti poistaa tämän suunnitelman?</p>
 <form action="/remove_item/{{ item.id }}" method="post">
   <input type="submit" name="remove" value="Poista suunnitelma">

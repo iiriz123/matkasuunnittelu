@@ -3,7 +3,8 @@
 {% block title %}Matkasuunnitelman muokkaus{% endblock %}
 
 {% block content %}
-<h2>Matkasuunnitelman muokkaus</h2>
+<h2>{{ item.destination }}</h2>
+<h3>Matkasuunnitelman muokkaus</h3>
 <form action="/update_item" method="post">
   <p>
     Matkakohde: <br />
@@ -36,4 +37,7 @@
   <input type="hidden" name="item_id" value="{{ item.id }}" />
   <input type="submit" value="Päivitä matkasuunnitelma" />
 </form>
+<p>
+  <a href="/item/{{ item.id }}">Takaisin ilmoitukseen</a>
+</p>
 {% endblock %}
