@@ -6,10 +6,17 @@ import config
 import db
 import items
 import users
+import markupsafe
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 def format_date(date_str):
     if date_str:

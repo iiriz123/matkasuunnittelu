@@ -11,14 +11,6 @@ body {
     padding: 0.2em 0.5em;
 }
 
-pre {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: 1.0;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-}
-
 .categories {
     display: flex;
     flex-wrap: wrap;
