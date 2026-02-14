@@ -1,4 +1,5 @@
 import sqlite3
+import secrets
 from flask import Flask
 from flask import abort, flash, make_response, redirect, render_template, request, session
 import config
@@ -20,6 +21,12 @@ app.jinja_env.filters['format_date'] = format_date
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -66,6 +73,7 @@ def new_item():
 @app.route("/create_item", methods=["POST"])
 def create_item():
     require_login()
+    check_csrf()
 
     destination = request.form["destination"]
     if not destination or len(destination) > 50:
@@ -96,6 +104,7 @@ def create_item():
 @app.route("/create_comment", methods=["POST"])
 def create_comment():
     require_login()
+    check_csrf()
 
     comment = request.form["comment"]
     if not comment or len(comment) > 1000:
@@ -145,6 +154,7 @@ def edit_images(item_id):
 @app.route("/add_image", methods=["POST"])
 def add_image():
     require_login()
+    check_csrf()
 
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
@@ -179,6 +189,7 @@ def show_image(image_id):
 @app.route("/remove_images", methods=["POST"])
 def remove_images():
     require_login()
+    check_csrf()
 
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
@@ -195,6 +206,8 @@ def remove_images():
 @app.route("/update_item", methods=["POST"])
 def update_item():
     require_login()
+    check_csrf()
+
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
     if not item:
@@ -239,6 +252,7 @@ def remove_item(item_id):
         return render_template("remove_item.html", item=item)
     
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
             items.remove_item(item_id)
             return redirect("/")
@@ -286,6 +300,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         
         else:
