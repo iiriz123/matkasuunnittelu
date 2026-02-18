@@ -11,9 +11,11 @@
   </p>
   <p>
     Matkan ajankohta: <br />
-    <input type="date" name="start_date" size="8" required/>
-    <input type="date" name="end_date" size="8" required/>
+    <input type="date" name="start_date" size="8" min="2026-01-01" required/>
+    -
+    <input type="date" name="end_date" size="8" min="2026-01-01" required/>
   </p>
+
   {% for class in classes %}
   <p>
       {{ class }}: <br />

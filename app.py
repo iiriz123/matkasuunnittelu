@@ -86,7 +86,12 @@ def create_item():
     if not destination or len(destination) > 50:
         abort(403)
     start_date = request.form["start_date"]
+    if not start_date or start_date < "2026-01-01":
+        abort(403)
     end_date = request.form["end_date"]
+    if not end_date or end_date < "2026-01-01":
+        abort(403)
+    
     description = request.form["description"]
     if not description or len(description) > 2000:
         abort(403)
@@ -226,7 +231,11 @@ def update_item():
     if not destination or len(destination) > 50:
         abort(403)
     start_date = request.form["start_date"]
+    if not start_date or start_date < "2026-01-01":
+        abort(403)
     end_date = request.form["end_date"]
+    if not end_date or end_date < "2026-01-01":
+        abort(403)
     description = request.form["description"]
     if not description or len(description) > 2000:
         abort(403)
@@ -284,7 +293,7 @@ def create():
 
     if password1 != password2:
         flash("VIRHE: salasanat eivät ole samat", "error")
-        return redirect("/register")  
+        return redirect("/register")
 
     try: 
         users.create_user(username, password1)
