@@ -276,38 +276,39 @@ def remove_item(item_id):
             return redirect("/item/" + str(item_id))
     
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html", filled={})
 
-@app.route("/create", methods=["POST"])
-def create():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
+    if request.method == "POST":
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
 
-    if not username or len(username) < 3 or len(username) > 30:
-        abort(403)
-    if not password1 or len(password1) < 8 or len(password1) > 60:
-        abort(403)
+        if not username or len(username) < 3 or len(username) > 30:
+            abort(403)
+        if not password1 or len(password1) < 8 or len(password1) > 60:
+            abort(403)
 
-    if password1 != password2:
-        flash("VIRHE: salasanat eivät ole samat", "error")
-        return redirect("/register")
+        if password1 != password2:
+            flash("VIRHE: salasanat eivät ole samat", "error")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
 
-    try: 
-        users.create_user(username, password1)
-        flash("Tunnus luotu", "success")
-    except sqlite3.IntegrityError:
-        flash("VIRHE: tunnus on jo varattu", "error")
-    
-    return redirect("/register")
-
+        try: 
+            users.create_user(username, password1)
+            flash("Tunnus luotu, voit nyt kirjautua sisään", "success")
+            return redirect("/register")
+        except sqlite3.IntegrityError:
+            flash("VIRHE: tunnus on jo varattu", "error")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", filled={})
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -321,7 +322,8 @@ def login():
         
         else:
             flash("VIRHE: väärä tunnus tai salasana", "error")
-            return redirect("/login")
+            filled = {"username": username}
+            return render_template("login.html", filled=filled)
 
 @app.route("/logout")
 def logout():

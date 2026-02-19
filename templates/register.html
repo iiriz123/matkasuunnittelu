@@ -5,10 +5,10 @@
 {% block content %}
 <h2>Luo tunnus</h2>
 
-<form action="/create" method="post">
+<form action="/register" method="post">
   <p>
     Tunnus: <br />
-    <input type="text" name="username" minlength="3" maxlength="30" required/>
+    <input type="text" name="username" value="{{ filled.username }}" minlength="3" maxlength="30" required/>
   </p>
   <p>
     Salasana: <br />
