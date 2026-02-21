@@ -181,7 +181,7 @@ def add_image():
         return redirect("/images/" + str(item_id))
 
     image = file.read()
-    if len(image) > 2024 * 1000:
+    if len(image) > 100000:
         flash("VIRHE: liian suuri kuva", "error")
         return redirect("/images/" + str(item_id))
 
