@@ -37,11 +37,14 @@
     Suunnittelija: <a href="/user/{{ item.user_id }}">{{ item.username }}</a>
 </p>
 <h3>Kommentit</h3>
-<ul>
-    {% for comment in comments %}
-    <li>{{ comment.comment | show_lines }} <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a></li>
-    {% endfor %}
-</ul>
+{% for comment in comments %}
+<p>
+    <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a>
+    {{ comment.comment | show_lines }}
+</p>
+<hr />
+{% endfor %}
+
 {% if session.user_id %}
 <h3>Uusi kommentti</h3>
 <form action="/create_comment" method="post">
@@ -50,5 +53,9 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Kommentoi" />
 </form>
+{% else %}
+<p>
+    Jos haluat lähettää kommentin, <a href="/login">kirjaudu sisään</a> ensin
+</p>
 {% endif %}
 {% endblock %}
