@@ -46,9 +46,9 @@
 {% endfor %}
 
 {% if session.user_id %}
-<h3>Uusi kommentti</h3>
 <form action="/create_comment" method="post">
-    <textarea name="comment" rows="5" cols="50" maxlength="1000" required></textarea>
+    <label for="comment">Uusi kommentti</label>:<br />
+    <textarea name="comment" id="comment" rows="5" cols="50" maxlength="1000" required></textarea>
     <input type="hidden" name="item_id" value="{{ item.id }}"> <br />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Kommentoi" />
