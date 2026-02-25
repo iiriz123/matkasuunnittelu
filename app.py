@@ -54,8 +54,6 @@ def find_item():
     query = request.args.get("query")
     if query:
         results = items.find_items(query)
-        if not results:
-            flash("Haku ei tuottanut tulosta. Kokeile toista hakusanaa.")
     else:
         query = ""
         results = []
