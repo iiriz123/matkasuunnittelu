@@ -7,25 +7,31 @@
 </head>
 
 <body>
-    <h1>Matkasuunnittelija</h1>
+    <header>
+        <h1>Matkasuunnittelija</h1>
+    </header>
 
     {% if session.user_id %}
     <p>
-        Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
+        Hei <a href="/user/{{ session.user_id }}">{{ session.username }}</a>! Suunnittele seuraava matkasi ja inspiroidu muiden vinkeistä!
     </p>
     {% endif %}
 
-    <p>
-        <a href="/">Etusivu</a> |
-        <a href="/find_item">Etsi matkasuunnitelma</a> |
-    {% if session.user_id %}
-        <a href="/new_item">Uusi matkasuunnitelma</a> |
-        <a href="/logout">Kirjaudu ulos</a>
-    {% else %}
-        <a href="/login">Kirjaudu sisään</a> |
-        <a href="/register">Luo tunnus</a>
-    {% endif %}
-    </p>
+    <div class="nav">
+      <nav>
+        <ul>
+            <li><a href="/">Etusivu</a></li>
+            <li><a href="/find_item">Etsi matkasuunnitelma</a></li>
+            {% if session.user_id %}
+            <li><a href="/new_item">Uusi matkasuunnitelma</a></li>
+            <li><a href="/logout">Kirjaudu ulos</a></li>
+            {% else %}
+            <li><a href="/login">Kirjaudu sisään</a></li>
+            <li><a href="/register">Luo tunnus</a></li>
+            {% endif %}
+        </ul>
+      </nav>
+    </div>
 
     {% block content %}{% endblock %}
 </body>
