@@ -233,7 +233,8 @@ def update_item():
         abort(403)
 
     all_classes = items.get_all_classes()
-    classes= []
+    classes = []
+    filled_classes = []
     for entry in request.form.getlist("classes"):
         if entry:
             class_title, class_value = entry.split(":")
@@ -242,6 +243,7 @@ def update_item():
             if class_value not in all_classes[class_title]:
                 abort(403)
             classes.append((class_title, class_value))
+            filled_classes.append(entry)
 
     destination = request.form["destination"]
     if not destination or len(destination) > 50:
@@ -256,7 +258,7 @@ def update_item():
     if not description or len(description) > 2000:
         abort(403)
     if start_date > end_date:
-        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description}
+        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description, "classes": filled_classes}
         flash("VIRHE: Matkan päättymispäivä ei voi olla ennen alkamispäivää.", "error")
         return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes, filled=filled)
 
