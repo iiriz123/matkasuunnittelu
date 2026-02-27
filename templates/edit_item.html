@@ -8,21 +8,27 @@
 <form action="/update_item" method="post">
   <p>
     <label for="destination">Matkakohde</label>:<br />
-    <input type="text" name="destination" id="destination" value="{{ item.destination }}" maxlength="50" required />
+    <input type="text" name="destination" id="destination" value="{{ filled.destination if filled.destination else item.destination }}" maxlength="50" required />
   </p>
   <fieldset>
     <legend>Matkan ajankohta</legend>
     <label for="start_date">Alkamispäivä:</label>
-    <input type="date" name="start_date" id="start_date" size="8" min="2026-01-01" required value="{{ item.start_date }}"/>
+    <input type="date" name="start_date" id="start_date" size="8" min="2026-01-01" required value="{{ filled.start_date if filled.start_date else item.start_date }}"/>
     -
-    <label for="end_date">Loppumispäivä:</label>
-    <input type="date" name="end_date" id="end_date" size="8" min="2026-01-01" required value="{{ item.end_date }}"/>
+    <label for="end_date">Päättymispäivä:</label>
+    <input type="date" name="end_date" id="end_date" size="8" min="2026-01-01" required value="{{ filled.end_date if filled.end_date else item.end_date }}"/>
   </fieldset>
+
+  {% for message in get_flashed_messages() %}
+  <div class="error">
+    {{ message }}</b>
+  </div>
+  {% endfor %}
 
   {% for class in all_classes %}
   <p>
       <label for="class{{ class }}">{{ class }}</a>: <br />
-      <select name="classes" id="class{{ class}}">
+      <select name="classes" id="class{{ class }}">
           <option value="">(valitse)</option>
       {% for option in all_classes[class] %}
           {% if classes[class] == option %}
@@ -36,7 +42,7 @@
   {% endfor %}
   <p>
     <label for="description">Suunnitelma</label>:<br />
-    <textarea name="description" id="description" rows="8" cols="60" maxlength="2000" required>{{ item.description }}</textarea>
+    <textarea name="description" id="description" rows="8" cols="60" maxlength="2000" required>{{ filled.description if filled.description else item.description }}</textarea>
   </p>
   <input type="hidden" name="item_id" value="{{ item.id }}" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

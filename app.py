@@ -73,7 +73,7 @@ def show_item(item_id):
 def new_item():
     require_login()
     classes = items.get_all_classes()
-    return render_template("new_item.html", classes=classes)
+    return render_template("new_item.html", classes=classes, filled={})
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -81,23 +81,14 @@ def create_item():
     check_csrf()
 
     destination = request.form["destination"]
-    if not destination or len(destination) > 50:
-        abort(403)
     start_date = request.form["start_date"]
-    if not start_date or start_date < "2026-01-01":
-        abort(403)
     end_date = request.form["end_date"]
-    if not end_date or end_date < "2026-01-01":
-        abort(403)
-    
     description = request.form["description"]
-    if not description or len(description) > 2000:
-        abort(403)
-    user_id = session["user_id"]
 
     all_classes = items.get_all_classes()
-
-    classes= []
+    classes = []
+    filled_classes = []
+    
     for entry in request.form.getlist("classes"):
         if entry:
             class_title, class_value = entry.split(":")
@@ -106,6 +97,22 @@ def create_item():
             if class_value not in all_classes[class_title]:
                 abort(403)
             classes.append((class_title, class_value))
+            filled_classes.append(entry)
+
+    if not destination or len(destination) > 50:
+        abort(403)
+    if not start_date or start_date < "2026-01-01":
+        abort(403)
+    if not end_date or end_date < "2026-01-01":
+        abort(403)
+    elif start_date > end_date:
+        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description, "classes": filled_classes}
+        flash("VIRHE: Matkan päättymispäivä ei voi olla ennen alkamispäivää.", "error")
+        return render_template("new_item.html", classes=all_classes, filled=filled)
+    
+    if not description or len(description) > 2000:
+        abort(403)
+    user_id = session["user_id"]
 
     item_id = items.add_item(destination, start_date, end_date, description, user_id, classes)
 
@@ -146,7 +153,7 @@ def edit_item(item_id):
     for entry in items.get_classes(item_id):
         classes[entry["title"]] = entry["value"]
 
-    return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes)
+    return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes, filled={})
 
 @app.route("/images/<int:item_id>")
 def edit_images(item_id):
@@ -225,6 +232,17 @@ def update_item():
     if item["user_id"] != session["user_id"]:
         abort(403)
 
+    all_classes = items.get_all_classes()
+    classes= []
+    for entry in request.form.getlist("classes"):
+        if entry:
+            class_title, class_value = entry.split(":")
+            if class_title not in all_classes:
+                abort(403)
+            if class_value not in all_classes[class_title]:
+                abort(403)
+            classes.append((class_title, class_value))
+
     destination = request.form["destination"]
     if not destination or len(destination) > 50:
         abort(403)
@@ -237,17 +255,10 @@ def update_item():
     description = request.form["description"]
     if not description or len(description) > 2000:
         abort(403)
-
-    all_classes = items.get_all_classes()
-    classes= []
-    for entry in request.form.getlist("classes"):
-        if entry:
-            class_title, class_value = entry.split(":")
-            if class_title not in all_classes:
-                abort(403)
-            if class_value not in all_classes[class_title]:
-                abort(403)
-            classes.append((class_title, class_value))
+    if start_date > end_date:
+        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description}
+        flash("VIRHE: Matkan päättymispäivä ei voi olla ennen alkamispäivää.", "error")
+        return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes, filled=filled)
 
     items.update_item(destination, start_date, end_date, description, item_id, classes)
     return redirect("/item/" + str(item_id)) 

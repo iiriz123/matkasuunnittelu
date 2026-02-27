@@ -7,33 +7,44 @@
 <form action="/create_item" method="post">
   <p>
     <label for="destination">Matkakohde</label>:<br />
-    <input type="text" name="destination" id="destination" maxlength="50" required />
+    <input type="text" name="destination" id="destination" maxlength="50" value="{{ filled.destination }}" required />
   </p>
 
   <fieldset>
     <legend>Matkan ajankohta</legend>
     <label for="start_date">Alkamispäivä:</label>
-    <input type="date" name="start_date" id="start_date" size="8" min="2026-01-01" required />
+    <input type="date" name="start_date" id="start_date" size="8" min="2026-01-01" value="{{ filled.start_date }}" required />
     -
-    <label for="end_date">Loppumispäivä:</label>
-    <input type="date" name="end_date" id="end_date" size="8" min="2026-01-01" required />
+    <label for="end_date">Päättymispäivä:</label>
+    <input type="date" name="end_date" id="end_date" size="8" min="2026-01-01" value="{{ filled.end_date }}" required />
   </fieldset>
-
+  {% for message in get_flashed_messages() %}
+  <div class="error">
+    {{ message }}</b>
+  </div>
+  {% endfor %}
   {% for class in classes %}
   <p>
       <label for="class{{ class }}">{{ class }}</label>: <br />
       <select name="classes" id="class{{ class }}">
-        <option value="">(valitse)</option>
-      {% for option in classes[class] %}
-        <option value="{{ class }}:{{ option }}">{{ option }}</option>
-      {% endfor %}
+          <option value="">(valitse)</option>
+          {% for option in classes[class] %}
+            <option 
+                value="{{ class }}:{{ option }}" 
+                {% if filled.classes and (class + ':' + option) in filled.classes %}selected{% endif %}
+            >
+                {{ option }}
+            </option>
+        {% endfor %}
       </select> 
   </p>
   {% endfor %}
+
   <p>
     <label for="description">Suunnitelma</label>:<br />
-    <textarea name="description" id="description" rows="8" cols="60" placeholder="Kirjoita tähän listaus matkasi aktiviteeteista" maxlength="2000" required></textarea>
+    <textarea name="description" id="description" rows="8" cols="60" placeholder="Kirjoita tähän listaus matkasi aktiviteeteista" maxlength="2000" required>{{ filled.description }}</textarea>
   </p>
+
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Luo matkasuunnitelma" />
 </form>
