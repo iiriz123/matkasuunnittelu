@@ -15,7 +15,7 @@
 </form>
 
 {% if query %}
-<h3>Tulokset</h3>
+<h3>Tulokset: {{ results_count }} suunnitelmaa</h3>
 {% for item in results %}
 <div class="item">
 <a href="/item/{{ item.id }}"> {{ item.destination }}</a> <br />
@@ -27,5 +27,16 @@ Kommenttien määrä: {{ item.comment_count }}
         Haku ei tuottanut tulosta. Kokeile toista hakusanaa.
     </b>
 {% endfor %}
+<p>
+    {% if page > 1 %}
+        <a href="/find_item/{{ page - 1 }}?query={{ query }}">&lt;&lt;</a>
+    {% endif %}
+    {% if results_count > 0 %}
+        Sivu {{ page }} / {{ page_count }}
+    {% endif %}
+    {% if page < page_count %}
+        <a href="/find_item/{{ page + 1 }}?query={{ query }}">&gt;&gt;</a>
+    {% endif %}
+</p>
 {% endif %}
 {% endblock %}

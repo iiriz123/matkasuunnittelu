@@ -6,14 +6,22 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
-def get_items(user_id):
+def item_count(user_id):
+    sql = """SELECT COUNT(id) FROM items
+            WHERE items.user_id = ?"""
+    return db.query(sql, [user_id])[0][0]
+
+def get_items(user_id, page, page_size):
     sql= """SELECT items.id, items.destination, COUNT(comments.id) AS comment_count
              FROM items 
              LEFT JOIN comments ON items.id = comments.item_id
              WHERE items.user_id = ?
              GROUP BY items.id
-             ORDER BY items.id DESC"""
-    return db.query(sql, [user_id])
+             ORDER BY items.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [user_id, limit, offset])
 
 def create_user(username, password):
     password_hash = generate_password_hash(password)

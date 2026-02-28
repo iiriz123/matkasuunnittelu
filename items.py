@@ -1,5 +1,9 @@
 import db
 
+def item_count():
+    sql = "SELECT COUNT(id) FROM items"
+    return db.query(sql)[0][0]
+
 def get_all_classes():
     sql = "SELECT title, value FROM classes ORDER BY id"
     result = db.query(sql)
@@ -57,14 +61,17 @@ def get_classes(item_id):
     sql= "SELECT title, value FROM item_classes WHERE item_id = ?"
     return db.query(sql, [item_id])
 
-def get_items():
+def get_items(page, page_size):
     sql= """SELECT items.id, items.destination, users.id user_id, users.username,
                    COUNT(comments.id) comment_count  
             FROM items JOIN users ON items.user_id = users.id
                        LEFT JOIN comments ON items.id = comments.item_id
             GROUP BY items.id
-            ORDER BY items.id DESC"""
-    return db.query(sql)
+            ORDER BY items.id DESC
+            LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 def get_item(item_id):
     sql="""SELECT i.id,

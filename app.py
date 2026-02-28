@@ -1,13 +1,15 @@
 import sqlite3
 import secrets
 from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session, g
 import config
 import db
 import items
 import users
 import markupsafe
 from datetime import datetime
+import time
+import math
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -37,27 +39,64 @@ def check_csrf():
         abort(403)
 
 @app.route("/")
-def index():
-    all_items = items.get_items()
-    return render_template("index.html", items=all_items)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    item_count = items.item_count()
+    page_count = math.ceil(item_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+    all_items = items.get_items(page, page_size)
+    return render_template("index.html", items=all_items, page=page, page_count=page_count)
 
 @app.route("/user/<int:user_id>")
-def show_user(user_id):
+@app.route("/user/<int:user_id>/<int:page>")
+def show_user(user_id,page=1):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    items = users.get_items(user_id)
-    return render_template("show_user.html", user=user, items=items)
+    page_size = 10
+    item_count = users.item_count(user_id)
+    page_count = math.ceil(item_count / page_size)
+    page_count = max(page_count, 1)
 
+    if page < 1:
+        return redirect("/user/" + str(user_id) + "/1")
+    if page > page_count:
+        return redirect("/user/" + str(user_id) + "/" + str(page_count))
+
+    user_items = users.get_items(user_id, page, page_size)
+    return render_template("show_user.html", count=item_count, user=user,
+                            items=user_items, page=page, page_count=page_count)
+
+@app.route("/find_item/<int:page>")
 @app.route("/find_item")
-def find_item():
+def find_item(page=1):
+    page_size = 10
     query = request.args.get("query")
     if query:
         results = items.find_items(query)
     else:
         query = ""
         results = []
-    return render_template("find_item.html", query=query, results=results)
+
+    results_count = len(results)
+    page_count = math.ceil(results_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/find_item/1?query=" + query)
+    if page > page_count:
+        return redirect("/find_item/" + str(page_count) + "?query=" + query)
+    
+    start_index = (page - 1) * page_size
+    paginated_results = results[start_index:start_index + page_size]
+
+    return render_template("find_item.html", query=query, results=paginated_results, page=page, results_count=results_count, page_count=page_count)
 
 @app.route("/item/<int:item_id>")
 def show_item(item_id):
@@ -344,3 +383,13 @@ def logout():
         del session["user_id"]
         del session["username"]
     return redirect("/")
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response

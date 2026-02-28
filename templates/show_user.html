@@ -5,7 +5,7 @@
 {% block content %}
 <h2>Käyttäjä {{ user.username }}</h2>
 <p>
-    Käyttäjällä on yhteensä {{ items | count }} matkasuunnitelmaa.
+    Käyttäjällä on yhteensä {{ count }} matkasuunnitelmaa.
 </p>
 <h3>Matkasuunnitelmat</h3>
 {% if items %}
@@ -18,4 +18,11 @@ Kommenttien määrä: {{ item.comment_count }}
 {% else %}
     <b>Ei lisättyjä matkasuunnitelmia.</b>
 {% endif %}
+<p>
+    {% if count > 0 %} 
+    <a href="/user/{{ user.id }}/{{ page - 1 }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="/user/{{ user.id }}/{{ page + 1 }}">&gt;&gt;</a>
+    {% endif %}
+</p>
 {% endblock %}
