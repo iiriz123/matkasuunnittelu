@@ -374,6 +374,8 @@ def login():
             session["user_id"] = user_id
             session["username"] = username
             session["csrf_token"] = secrets.token_hex(16)
+            if next_page == "http://127.0.0.1:5000/register":
+                return redirect("/")
             return redirect(next_page)
         
         else:

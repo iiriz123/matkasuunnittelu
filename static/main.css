@@ -75,5 +75,17 @@ h1, h2 {
     border-radius: 15px;
 }
 
-.error { color: red; }
-.success { color: green; }
+.error { 
+    border: 2px solid black;
+    margin-bottom: 0.5em;
+    padding: 1em;
+    background-color: red;
+    color: white;
+}
+.success { 
+    border: 2px solid black;
+    margin-bottom: 0.5em;
+    padding: 1em;
+    background-color: green;
+    color: white;
+}
