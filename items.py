@@ -13,11 +13,11 @@ def get_all_classes():
         classes[title] = []
     for title, value in result:
         classes[title].append(value)
-    
+
     return classes
 
 def add_item(destination, start_date, end_date, description, user_id, classes):
-    sql = """INSERT INTO items (destination, start_date, end_date, description, user_id) 
+    sql = """INSERT INTO items (destination, start_date, end_date, description, user_id)
     VALUES (?, ?, ?, ?, ?)"""
     db.execute(sql, [destination, start_date, end_date, description, user_id])
 
@@ -29,7 +29,7 @@ def add_item(destination, start_date, end_date, description, user_id, classes):
     return item_id
 
 def add_comment(item_id, user_id, comment):
-    sql = """INSERT INTO comments (item_id, user_id, comment) 
+    sql = """INSERT INTO comments (item_id, user_id, comment)
     VALUES (?, ?, ?)"""
     db.execute(sql, [item_id, user_id, comment])
 
@@ -62,10 +62,11 @@ def get_classes(item_id):
     return db.query(sql, [item_id])
 
 def get_items(page, page_size):
-    sql= """SELECT items.id, items.destination, items.start_date, items.end_date, users.id user_id, users.username,
+    sql= """SELECT items.id, items.destination, items.start_date, items.end_date,
+                   users.id user_id, users.username,
                    COUNT(comments.id) comment_count  
             FROM items JOIN users ON items.user_id = users.id
-                       LEFT JOIN comments ON items.id = comments.item_id
+            LEFT JOIN comments ON items.id = comments.item_id
             GROUP BY items.id
             ORDER BY items.id DESC
             LIMIT ? OFFSET ?"""

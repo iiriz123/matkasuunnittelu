@@ -3,17 +3,20 @@
 {% block title %}Matkasuunnitelman kuvat{% endblock %}
 
 {% block content %}
+
 <h2>{{ item.destination }}</h2>
+
 <h3>Matkasuunnitelman kuvat</h3>
+
 <p>
-    Suunnitelmassa on {{ images | count }} kuvaa.
+  Suunnitelmassa on {{ images | count }} kuvaa.
 </p>
 
 <form action="/remove_images" method="post">
   {% for image in images %}
-  <input type="checkbox" name="image_id" value="{{ image.id }}">
-  <img src="/image/{{ image.id }}" alt="Suunnitelman kuva" />
-  <br />
+    <input type="checkbox" name="image_id" value="{{ image.id }}">
+    <img src="/image/{{ image.id }}" alt="Suunnitelman kuva" />
+    <br />
   {% endfor %}
   <input type="hidden" name="item_id" value="{{ item.id }}">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
@@ -23,7 +26,9 @@
 </form>
 
 <h4>Lisää uusi kuva</h4>
+
 <p>Lähetä jpg-tiedosto, jonka koko on enintään 100 kt</p>
+
 <form action="/add_image" method="post" enctype="multipart/form-data">
   <p>
     <label for="image">Kuva</label>:
@@ -31,14 +36,16 @@
   </p>
   <input type="hidden" name="item_id" value="{{ item.id }}">
   {% for message in get_flashed_messages() %}
-  <div class="error">
-    {{ message }}</b>
-  </div>
+    <div class="error">
+      {{ message }}</b>
+    </div>
   {% endfor %}
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Lähetä" />
 </form>
+
 <p>
   <a href="/item/{{ item.id }}">Takaisin ilmoitukseen</a>
 </p>
+
 {% endblock %}

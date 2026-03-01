@@ -18,25 +18,24 @@
     <label for="end_date">Päättymispäivä:</label>
     <input type="date" name="end_date" id="end_date" size="8" min="2026-01-01" value="{{ filled.end_date }}" required />
   </fieldset>
+
   {% for message in get_flashed_messages() %}
-  <div class="error">
-    {{ message }}</b>
-  </div>
+    <div class="error">
+      {{ message }}</b>
+    </div>
   {% endfor %}
+
   {% for class in classes %}
   <p>
-      <label for="class{{ class }}">{{ class }}</label>: <br />
-      <select name="classes" id="class{{ class }}">
-          <option value="">(valitse)</option>
-          {% for option in classes[class] %}
-            <option 
-                value="{{ class }}:{{ option }}" 
-                {% if filled.classes and (class + ':' + option) in filled.classes %}selected{% endif %}
-            >
-                {{ option }}
-            </option>
-        {% endfor %}
-      </select> 
+    <label for="class{{ class }}">{{ class }}</label>: <br />
+    <select name="classes" id="class{{ class }}">
+      <option value="">(valitse)</option>
+      {% for option in classes[class] %}
+        <option value="{{ class }}:{{ option }}" {% if filled.classes and (class + ':' + option) in filled.classes %}selected{% endif %}>
+          {{ option }}
+        </option>
+      {% endfor %}
+    </select> 
   </p>
   {% endfor %}
 

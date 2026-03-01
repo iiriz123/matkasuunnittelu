@@ -4,60 +4,63 @@
 
 {% block content %}
 <div class="content">
-    <h2>{{ item.destination }}</h2>
+  <h2>{{ item.destination }}</h2>
 
-    {% if session.user_id == item.user_id %}
-    <p>
-        <a href="/edit_item/{{ item.id }}">Muokkaa</a>
-        <a href="/remove_item/{{ item.id }}">Poista</a>
-        <a href="/images/{{ item.id }}">Kuvat</a>
-
-    </p>
-    {% endif %}
-    {% for image in images %}
+  {% if session.user_id == item.user_id %}
+  <p>
+    <a href="/edit_item/{{ item.id }}">Muokkaa</a>
+    <a href="/remove_item/{{ item.id }}">Poista</a>
+    <a href="/images/{{ item.id }}">Kuvat</a>
+  </p>
+  {% endif %}
+  {% for image in images %}
     <img src="/image/{{ image.id }}" alt="Suunnitelman kuva" />
-    {% endfor %}
+  {% endfor %}
 
-    {% if classes %}
-    <div class="categories">
-        {% for title, value in classes %}
-            <span class="category-button">{{ title }}: {{ value }}</span>
-        {% endfor %}
-    </div>
-    {% endif %}
-    <p>
-        Matkan ajankohta: {{ item.start_date | format_date }} - {{ item.end_date | format_date }}
-    </p>
-    <p>
-        Suunnitelma:
-    </p>
-    <p>
+  {% if classes %}
+  <div class="categories">
+    {% for title, value in classes %}
+      <span class="category-button">{{ title }}: {{ value }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <p>
+    Matkan ajankohta: {{ item.start_date | format_date }} - {{ item.end_date | format_date }}
+  </p>
+  <p>
+    Suunnitelma:
+  </p>
+  <p>
     {{ item.description | show_lines }}
-    </p>
-    <b>
-        Suunnittelija: <a href="/user/{{ item.user_id }}">{{ item.username }}</a>
-    </b>
+  </p>
+  <b>
+    Suunnittelija: <a href="/user/{{ item.user_id }}">{{ item.username }}</a>
+  </b>
 </div>
+
 <h3>Kommentit</h3>
+
 {% for comment in comments %}
 <p>
-    <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a>
-    {{ comment.comment | show_lines }}
+  <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a>
+  {{ comment.comment | show_lines }}
 </p>
 <hr />
+
 {% endfor %}
 
 {% if session.user_id %}
 <form action="/create_comment" method="post">
-    <label for="comment">Uusi kommentti</label>:<br />
-    <textarea name="comment" id="comment" rows="5" cols="50" maxlength="1000" required></textarea>
-    <input type="hidden" name="item_id" value="{{ item.id }}"> <br />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Kommentoi" />
+  <label for="comment">Uusi kommentti</label>:<br />
+  <textarea name="comment" id="comment" rows="5" cols="50" maxlength="1000" required></textarea>
+  <input type="hidden" name="item_id" value="{{ item.id }}"> <br />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Kommentoi" />
 </form>
 {% else %}
 <p>
-    Jos haluat lähettää kommentin, <a href="/login">kirjaudu sisään</a> ensin
+  Jos haluat lähettää kommentin, <a href="/login">kirjaudu sisään</a> ensin
 </p>
 {% endif %}
+
 {% endblock %}

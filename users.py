@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+
 import db
 
 def get_user(user_id):
@@ -12,7 +13,7 @@ def item_count(user_id):
     return db.query(sql, [user_id])[0][0]
 
 def get_items(user_id, page, page_size):
-    sql= """SELECT items.id, items.destination, items.start_date, items.end_date, 
+    sql= """SELECT items.id, items.destination, items.start_date, items.end_date,
                    COUNT(comments.id) AS comment_count
              FROM items 
              LEFT JOIN comments ON items.id = comments.item_id

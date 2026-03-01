@@ -5,24 +5,24 @@
 {% block content %}
 <h2>Käyttäjä {{ user.username }}</h2>
 <p>
-    Käyttäjällä on yhteensä {{ count }} matkasuunnitelmaa.
+  Käyttäjällä on yhteensä {{ count }} matkasuunnitelmaa.
 </p>
 <h3>Matkasuunnitelmat</h3>
 {% if items %}
-{% for item in items %}
-<div class="item">
-<a href="/item/{{ item.id }}"> {{ item.destination }}</a> ({{ item.start_date | format_date }} - {{ item.end_date | format_date }})<br />
-Kommenttien määrä: {{ item.comment_count }}
-</div>
-{% endfor %}
-{% else %}
+  {% for item in items %}
+  <div class="item">
+    <a href="/item/{{ item.id }}"> {{ item.destination }}</a> ({{ item.start_date | format_date }} - {{ item.end_date | format_date }})<br />
+    Kommenttien määrä: {{ item.comment_count }}
+  </div>
+  {% endfor %}
+  {% else %}
     <b>Ei lisättyjä matkasuunnitelmia.</b>
 {% endif %}
 <p>
-    {% if count > 0 %} 
-    <a href="/user/{{ user.id }}/{{ page - 1 }}">&lt;&lt;</a>
-    Sivu {{ page }}/{{ page_count }}
-    <a href="/user/{{ user.id }}/{{ page + 1 }}">&gt;&gt;</a>
-    {% endif %}
+  {% if count > 0 %} 
+  <a href="/user/{{ user.id }}/{{ page - 1 }}">&lt;&lt;</a>
+  Sivu {{ page }}/{{ page_count }}
+  <a href="/user/{{ user.id }}/{{ page + 1 }}">&gt;&gt;</a>
+  {% endif %}
 </p>
 {% endblock %}

@@ -1,14 +1,16 @@
+import re
 import sqlite3
 import secrets
-from flask import Flask, abort, flash, make_response, redirect, render_template, request, session, g
-import config
-import items
-import users
-import markupsafe
 from datetime import datetime
 import time
 import math
-import re
+
+from flask import Flask, abort, flash, make_response, redirect, render_template, request, session, g
+import markupsafe
+
+import config
+import items
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -50,7 +52,8 @@ def index(page=1):
     if page > page_count:
         return redirect("/" + str(page_count))
     all_items = items.get_items(page, page_size)
-    return render_template("index.html", items=all_items, page=page, item_count=item_count, page_count=page_count)
+    return render_template("index.html", items=all_items, page=page,
+                        item_count=item_count, page_count=page_count)
 
 @app.route("/user/<int:user_id>")
 @app.route("/user/<int:user_id>/<int:page>")
@@ -91,11 +94,13 @@ def find_item(page=1):
         return redirect("/find_item/1?query=" + query)
     if page > page_count:
         return redirect("/find_item/" + str(page_count) + "?query=" + query)
-    
+
     start_index = (page - 1) * page_size
     paginated_results = results[start_index:start_index + page_size]
 
-    return render_template("find_item.html", query=query, results=paginated_results, page=page, results_count=results_count, page_count=page_count)
+    return render_template("find_item.html", query=query,
+                           results=paginated_results, page=page,
+                           results_count=results_count, page_count=page_count)
 
 @app.route("/item/<int:item_id>")
 def show_item(item_id):
@@ -105,7 +110,8 @@ def show_item(item_id):
     classes = items.get_classes(item_id)
     comments = items.get_comments(item_id)
     images = items.get_images(item_id)
-    return render_template("show_item.html", item=item, classes=classes, comments=comments, images=images)
+    return render_template("show_item.html", item=item, classes=classes,
+                           comments=comments, images=images)
 
 @app.route("/new_item")
 def new_item():
@@ -126,7 +132,7 @@ def create_item():
     all_classes = items.get_all_classes()
     classes = []
     filled_classes = []
-    
+
     for entry in request.form.getlist("classes"):
         if entry:
             class_title, class_value = entry.split(":")
@@ -144,10 +150,11 @@ def create_item():
     if not end_date or end_date < "2026-01-01":
         abort(403)
     elif start_date > end_date:
-        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description, "classes": filled_classes}
+        filled = {"destination": destination, "start_date": start_date,
+                  "end_date": end_date, "description": description, "classes": filled_classes}
         flash("VIRHE: Matkan päättymispäivä ei voi olla ennen alkamispäivää.", "error")
         return render_template("new_item.html", classes=all_classes, filled=filled)
-    
+
     if not description or len(description) > 2000:
         abort(403)
     user_id = session["user_id"]
@@ -191,7 +198,8 @@ def edit_item(item_id):
     for entry in items.get_classes(item_id):
         classes[entry["title"]] = entry["value"]
 
-    return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes, filled={})
+    return render_template("edit_item.html", item=item, classes=classes,
+                           all_classes=all_classes, filled={})
 
 @app.route("/images/<int:item_id>")
 def edit_images(item_id):
@@ -203,7 +211,7 @@ def edit_images(item_id):
         abort(403)
 
     images = items.get_images(item_id)
-    
+
     return render_template("images.html", item=item, images=images)
 
 @app.route("/add_image", methods=["POST"])
@@ -296,12 +304,14 @@ def update_item():
     if not description or len(description) > 2000:
         abort(403)
     if start_date > end_date:
-        filled = {"destination": destination, "start_date": start_date, "end_date": end_date, "description": description, "classes": filled_classes}
+        filled = {"destination": destination, "start_date": start_date,
+                  "end_date": end_date, "description": description, "classes": filled_classes}
         flash("VIRHE: Matkan päättymispäivä ei voi olla ennen alkamispäivää.", "error")
-        return render_template("edit_item.html", item=item, classes=classes, all_classes=all_classes, filled=filled)
+        return render_template("edit_item.html", item=item, classes=classes,
+                               all_classes=all_classes, filled=filled)
 
     items.update_item(destination, start_date, end_date, description, item_id, classes)
-    return redirect("/item/" + str(item_id)) 
+    return redirect("/item/" + str(item_id))
 
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
 def remove_item(item_id):
@@ -315,7 +325,7 @@ def remove_item(item_id):
 
     if request.method == "GET":
         return render_template("remove_item.html", item=item)
-    
+
     if request.method == "POST":
         check_csrf()
         if "remove" in request.form:
@@ -323,7 +333,6 @@ def remove_item(item_id):
             return redirect("/")
         else:
             return redirect("/item/" + str(item_id))
-    
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -341,7 +350,7 @@ def register():
             flash("VIRHE: tunnus voi sisältää vain kirjaimia, numeroita ja alaviivoja.", "error")
             filled = {"username": username}
             return render_template("register.html", filled=filled)
-        
+
         if not password1 or len(password1) < 8 or len(password1) > 60:
             abort(403)
 
@@ -350,7 +359,7 @@ def register():
             filled = {"username": username}
             return render_template("register.html", filled=filled)
 
-        try: 
+        try:
             users.create_user(username, password1)
             flash("Tunnus luotu, voit nyt kirjautua sisään", "success")
             return redirect("/register")
@@ -363,12 +372,12 @@ def register():
 def login():
     if request.method == "GET":
         return render_template("login.html", filled={}, next_page=request.referrer)
-    
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         next_page = request.form["next_page"]
-        
+
         user_id = users.check_login(username, password)
         if user_id:
             session["user_id"] = user_id
@@ -377,7 +386,7 @@ def login():
             if next_page == "http://127.0.0.1:5000/register":
                 return redirect("/")
             return redirect(next_page)
-        
+
         else:
             flash("VIRHE: väärä tunnus tai salasana", "error")
             filled = {"username": username}

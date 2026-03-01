@@ -21,25 +21,25 @@
 
   {% for message in get_flashed_messages() %}
   <div class="error">
-    {{ message }}</b>
+    {{ message }}
   </div>
   {% endfor %}
 
   {% for class in all_classes %}
   <p>
-      <label for="class{{ class }}">{{ class }}</a>: <br />
-      <select name="classes" id="class{{ class }}">
-          <option value="">(valitse)</option>
+    <label for="class{{ class }}">{{ class }}</a>: <br />
+    <select name="classes" id="class{{ class }}">
+      <option value="">(valitse)</option>
       {% for option in all_classes[class] %}
-          {% if filled and (class + ':' + option) in filled.classes %}
-              <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
-          {% elif classes[class] == option %}
-              <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
-          {% else %}
-              <option value="{{ class }}:{{ option }}">{{ option }}</option>
-          {% endif %}
+        {% if filled and (class + ':' + option) in filled.classes %}
+          <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
+        {% elif classes[class] == option %}
+          <option value="{{ class }}:{{ option }}" selected>{{ option }}</option>
+        {% else %}
+          <option value="{{ class }}:{{ option }}">{{ option }}</option>
+        {% endif %}
       {% endfor %}
-      </select> 
+    </select> 
   </p>
   {% endfor %}
   <p>

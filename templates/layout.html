@@ -7,33 +7,33 @@
 </head>
 
 <body>
-    <header>
-        <h1>Matkasuunnittelija</h1>
-    </header>
+  <header>
+    <h1>Matkasuunnittelija</h1>
+  </header>
 
-    {% if session.user_id %}
-    <p>
-        Hei <a href="/user/{{ session.user_id }}">{{ session.username }}</a>! Suunnittele seuraava matkasi ja inspiroidu muiden vinkeistä!
-    </p>
-    {% endif %}
+  {% if session.user_id %}
+  <p>
+    Hei <a href="/user/{{ session.user_id }}">{{ session.username }}</a>! Suunnittele seuraava matkasi ja inspiroidu muiden vinkeistä!
+  </p>
+  {% endif %}
 
-    <div class="nav">
-      <nav>
-        <ul>
-            <li><a href="/">Etusivu</a></li>
-            <li><a href="/find_item">Etsi matkasuunnitelma</a></li>
-            {% if session.user_id %}
-            <li><a href="/new_item">Uusi matkasuunnitelma</a></li>
-            <li><a href="/logout">Kirjaudu ulos</a></li>
-            {% else %}
-            <li><a href="/login">Kirjaudu sisään</a></li>
-            <li><a href="/register">Luo tunnus</a></li>
-            {% endif %}
-        </ul>
-      </nav>
-    </div>
+  <div class="nav">
+    <nav>
+      <ul>
+        <li><a href="/">Etusivu</a></li>
+        <li><a href="/find_item">Etsi matkasuunnitelma</a></li>
+        {% if session.user_id %}
+        <li><a href="/new_item">Uusi matkasuunnitelma</a></li>
+        <li><a href="/logout">Kirjaudu ulos</a></li>
+        {% else %}
+        <li><a href="/login">Kirjaudu sisään</a></li>
+        <li><a href="/register">Luo tunnus</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
 
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 </body>
 
 </html>
