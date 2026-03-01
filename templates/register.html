@@ -8,7 +8,7 @@
 <form action="/register" method="post">
   <p>
     <label for="username">Tunnus</label>: <br />
-    <input type="text" name="username" id="username" value="{{ filled.username }}" minlength="3" maxlength="30" required/>
+    <input type="text" name="username" id="username" value="{{ filled.username }}" minlength="3" maxlength="30" pattern="^\S+$" title="Käyttäjätunnus ei saa sisältää välilyöntejä." required/>
   </p>
   <p>
     <label for="password1">Salasana</label>: <br />

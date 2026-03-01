@@ -62,7 +62,7 @@ def get_classes(item_id):
     return db.query(sql, [item_id])
 
 def get_items(page, page_size):
-    sql= """SELECT items.id, items.destination, users.id user_id, users.username,
+    sql= """SELECT items.id, items.destination, items.start_date, items.end_date, users.id user_id, users.username,
                    COUNT(comments.id) comment_count  
             FROM items JOIN users ON items.user_id = users.id
                        LEFT JOIN comments ON items.id = comments.item_id
@@ -110,8 +110,9 @@ def remove_item(item_id):
     db.execute(sql, [item_id])
 
 def find_items(query):
-    sql = """SELECT items.id, items.destination, users.id user_id, users.username,
-                   COUNT(comments.id) comment_count  
+    sql = """SELECT items.id, items.destination, items.start_date, items.end_date,
+                    users.id user_id, users.username,
+                    COUNT(comments.id) comment_count  
             FROM items JOIN users ON items.user_id = users.id
                        LEFT JOIN comments ON items.id = comments.item_id
             WHERE destination LIKE ? OR description LIKE ?

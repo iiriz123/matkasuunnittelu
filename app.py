@@ -2,13 +2,13 @@ import sqlite3
 import secrets
 from flask import Flask, abort, flash, make_response, redirect, render_template, request, session, g
 import config
-import db
 import items
 import users
 import markupsafe
 from datetime import datetime
 import time
 import math
+import re
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -337,6 +337,11 @@ def register():
 
         if not username or len(username) < 3 or len(username) > 30:
             abort(403)
+        if not re.match("^[a-zA-Z0-9_]*$", username):
+            flash("VIRHE: tunnus voi sisältää vain kirjaimia, numeroita ja alaviivoja.", "error")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
+        
         if not password1 or len(password1) < 8 or len(password1) > 60:
             abort(403)
 
