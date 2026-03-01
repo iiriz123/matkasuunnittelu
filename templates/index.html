@@ -17,8 +17,10 @@ Kommenttien määrä: {{ item.comment_count }}
 <b>Ei lisättyjä matkasuunnitelmia.</b>
 {% endif %}
 <p>
+    {% if item_count > 0 %} 
     <a href="/{{ page - 1 }}">&lt;&lt;</a>
     Sivu {{ page }}/{{ page_count }}
     <a href="/{{ page + 1 }}">&gt;&gt;</a>
+    {% endif %}
 </p>
 {% endblock %}

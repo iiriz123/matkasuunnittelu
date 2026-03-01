@@ -1,7 +1,6 @@
 import sqlite3
 import secrets
-from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session, g
+from flask import Flask, abort, flash, make_response, redirect, render_template, request, session, g
 import config
 import db
 import items
@@ -51,7 +50,7 @@ def index(page=1):
     if page > page_count:
         return redirect("/" + str(page_count))
     all_items = items.get_items(page, page_size)
-    return render_template("index.html", items=all_items, page=page, page_count=page_count)
+    return render_template("index.html", items=all_items, page=page, item_count=item_count, page_count=page_count)
 
 @app.route("/user/<int:user_id>")
 @app.route("/user/<int:user_id>/<int:page>")
